@@ -143,6 +143,85 @@ modelo <- glm(es_clon ~ peso + velocidad, family = binomial(link ="logit"),data 
 print(summary(modelo))
 
 
+# ----------- EVALUACIÓN DEL MODELO RLM -----------
+# Obtener los residuos y las estadísticas .
+output <- data.frame (predicted.probabilities = fitted(modelo))
+output [["standardized.residuals"]] <- rstandard(modelo)
+output [["studentized.residuals"]] <- rstudent( modelo)
+output [["cooks.distance"]] <- cooks.distance(modelo)
+output [["dfbeta"]] <- dfbeta(modelo )
+output [["dffit"]] <- dffits(modelo)
+output [["leverage"]] <- hatvalues(modelo)
+
+# Evaluar residuos estandarizados que escapen a la normalidad.
+# 95 % de los residuos estandarizados deberían estar entre
+# -1.96 y 1.96 , y 99 % entre -2.58 y 2.58.
+sospechosos1 <- which (abs(output[["standardized.residuals"]]) > 1.96)
+sospechosos1 <- sort(sospechosos1 )
+cat ("\n\n")
+cat (" Residuos estandarizados fuera del 95 % esperado \n")
+cat (" - - - - - - - - - - -- - - - - - - - - - - - - - - - - - - - -- - - - - - - - - - - - - - - -\n")
+print(rownames(entrenamiento[sospechosos1, ]) )
+
+# Revisar casos con distancia de Cook mayor a uno.
+sospechosos2 <- which(output[["cooks.distance"]] > 1)
+sospechosos2 <- sort(sospechosos2)
+cat ("\n\n")
+cat ("Residuales con una distancia de Cook alta \n")
+cat ("- - - - - - - - - - -- - - - - - - - - - - - - - - - - - - - -- - - - - - - - -\n")
+print(rownames(entrenamiento[sospechosos2, ]))
+
+# Revisar casos cuyo apalancamiento sea más del doble
+# o triple del apalancamiento promedio .
+leverage.promedio <- ncol(entrenamiento)/nrow(datos)
+sospechosos3 <- which(output [["leverage "]] > leverage.promedio)
+sospechosos3 <- sort(sospechosos3)
+
+cat ("\n\n")
+
+cat (" Residuales con levarage fuera de rango ( > ")
+cat (round(leverage.promedio, 3) , ")", "\n", sep = "")
+cat (" - - - - - - - - - - -- - - - - - - - - - - - - - - - - - - - -- - - - - -\n")
+print(rownames(entrenamiento[sospechosos3, ]) )
+
+# Revisar casos con DFBeta >= 1.
+sospechosos4 <- which(apply(output[["dfbeta"]] >= 1 ,1 ,any))
+sospechosos4 <- sort(sospechosos4)
+names(sospechosos4 ) <- NULL
+cat ("\n\n")
+cat (" Residuales con DFBeta sobre 1\n")
+cat (" - - - - - - - - - - -- - - - - - - - - - - - - - - - - -\n")
+print(rownames(entrenamiento[sospechosos4 , ]))
+
+# Detalle de las observaciones posiblemente atí picas .
+sospechosos <- c(sospechosos1, sospechosos2, sospechosos3, sospechosos4)
+sospechosos <- sort (unique(sospechosos))
+cat ("\n\n")
+cat (" Casos sospechosos \n")
+cat (" - - - - - - - - - - -- - - - - -\n")
+print(entrenamiento[sospechosos, ])
+cat("\n\n")
+print(output[sospechosos , ])
+
+
+# -------------- VERIFICACIÓN DE CONDICIONES ----------
+
+# Verificación de multicolinealidad .
+cat ("Verificación de colinealidad \n")
+cat (" - - - - - - - - - - -- - - - - - - - - - - - - - - - - - - - -- - - - - -\n")
+cat ("\n VIF :\n")
+vifs <- vif (modelo)
+print ( vifs )
+cat ("\n Promedio VIF: ")
+print ( mean ( vifs ) )
+# Si miramos los factores de inflación de la varianza, 
+# en general no parecen ser preocupantes, por lo que se verifica
+# la condición de multicolinealidad. 
+
+# Independencia de los residuos.
+cat (" Verificación de independencia de los residuos \n")
+cat (" - - - - - - - - - - -- - - - - - - - - - - - - - - - - - - - -- - - - - -\n")
+print(durbinWatsonTest(modelo) )
 
 
 
