@@ -89,10 +89,10 @@ print (holm)
 #-----------------------------------------------PREGUNTA DOS ------------------------------------------------------------
 
 # Lectura del archivo
-dir <- "E:/IME"
-base <- "Body-EP12.csv"
+dir <- "E:/IME/PEP2_IME_2-2021"
+base <- "Datos PEP 2.csv"
 arch <- file.path(dir,base)
-datos<-read.csv(arch, fileEncoding = "UTF-8")
+datos<-read.csv2(arch, fileEncoding = "UTF-8")
 
 #se define la semilla con la que trabajaremos, lo cual nos permite
 #trabajar siempre con los mismos números
@@ -102,6 +102,30 @@ set.seed(4432)
 tam <- 400
 
 # Se obtiene la muestra de 400 datos
-muestra1 <- datos[sample(nrow(datos), tam), ]
+datos <- datos[sample(nrow(datos), tam), ]
+
+n <- nrow(datos)
+n_entrenamiento <- floor(0.8 * n)
+muestra <- sample.int(n = n, size = n_entrenamiento, replace = FALSE)
+entrenamiento <- datos[muestra, ]
+prueba <- datos[-muestra, ]
+
+columnas <- colnames(datos)
+
+i_es_clon <- which(columnas == "es_clon")
+columnas <- columnas[-i_es_clon]
+
+# Se seleccionan las 8 variables predictoras de forma aleatoria
+variables <- sample(columnas, 8)
+print(variables)
+
+estan <- c()
+for (i in 1:length(variables)){
+  indice <- which(columnas == variables[i])
+  estan <- c(estan, indice)
+}
+restantes <- columnas[-estan]
+
+print(restantes)
 
 
