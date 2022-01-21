@@ -84,3 +84,24 @@ print (holm)
 # no existen diferencias significativas.
 # Por lo que podemos concluir nuevamente con un 99%
 # que la media de la evaluación realizada por los oficiales es la misma para todos.
+
+
+#-----------------------------------------------PREGUNTA DOS ------------------------------------------------------------
+
+# Lectura del archivo
+dir <- "E:/IME"
+base <- "Body-EP12.csv"
+arch <- file.path(dir,base)
+datos<-read.csv(arch, fileEncoding = "UTF-8")
+
+#se define la semilla con la que trabajaremos, lo cual nos permite
+#trabajar siempre con los mismos números
+set.seed(4432)
+
+# se define el tamaño de la muestra
+tam <- 400
+
+# Se obtiene la muestra de 400 datos
+muestra1 <- datos[sample(nrow(datos), tam), ]
+
+
