@@ -109,8 +109,6 @@ datos[["es_clon"]] <- factor(condicion)
 #trabajar siempre con los mismos números
 set.seed(4432)
 
-
-
 # se define el tamaño de la muestra
 tam <- 400
 
@@ -141,12 +139,42 @@ print(variables)
 # implicaría que fuese más ágil y veloz.
 
 # Ajustar modelo.
-
-
 modelo <- glm(es_clon ~ peso + velocidad, family = binomial(link ="logit"),data = entrenamiento)
 print(summary(modelo))
 
 
+
+
+
+# ----------- EVALUAR EL MODELO -------
+
+# Evaluar el modelo con el conjunto de entrenamiento
+cat ("Evaluación del modelo a partir del conjunto de entrenamiento :\n")
+probs_e <- predict(modelo, entrenamiento, type = "response")
+
+umbral <- 0.5
+preds_e <- sapply(probs_e , function (p) ifelse( p >= umbral , "1", "0"))
+preds_e <- factor ( preds_e , levels = levels ( datos [["es_clon"]]) )
+
+ROC_e <- roc(entrenamiento[["es_clon"]], probs_e)
+plot(ROC_e)
+
+matriz_e <- confusionMatrix(preds_e , entrenamiento [["es_clon"]])
+print(matriz_e)
+
+# Evaluar el modelo con el conjunto de prueba.
+
+cat (" Evaluación del modelo a partir del conjunto de prueba :\n")
+probs_p <- predict(modelo, prueba , type = "response")
+
+preds_p <- sapply(probs_p , function (p) ifelse ( p >= umbral , "1", "0") )
+preds_p <- factor(preds_p , levels = levels ( datos [["es_clon"]]) )
+
+ROC_p <- roc(prueba[["es_clon"]] , probs_p)
+plot(ROC_p)
+
+matriz_p <-confusionMatrix(preds_p , prueba[["es_clon"]])
+print(matriz_p)
 
 
 
