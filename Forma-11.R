@@ -66,3 +66,21 @@ print (prueba2)
 g2 <- ezPlot (data = datos , dv = exigencia, wid = id, within = evaluador, y_lab = "Nivel de exigencia", x = evaluador)
 print ( g2 )
 
+# Luego de realizar la prueba ezANOVA se obtiene un p-valor = 0.09673702 mayor a nuestro nivel de significación,
+# se falla en rechazar la hipótesis nula. Por lo tanto con un nivel de confianza del 99% podemos concluir que la media
+# de la evaluación realizada por los oficiales es la misma para todos.
+
+# Sin embargo como el Lord Sith ha sido muy 
+# claro al solicitar un reporte de aquellos oficiales cuyas 
+# evaluaciones presenten diferencias, y observando el gráfico del tamaño del efecto, 
+# se procede a realizar un análisis Post Hoc con correciones de Bonferroni. 
+
+# Procedimiento post -hoc de Holm .
+holm <- pairwise.t.test ( datos [["exigencia"]] , datos [["evaluador"]] ,p.adj = "holm", paired = TRUE )
+cat ("\n Corrección de Holm \n")
+print (holm)
+
+# Al realizar el análisis Post Hoc y analizando el grafico del tamaño del efecto, se obtiene que 
+# no existen diferencias significativas.
+# Por lo que podemos concluir nuevamente con un 99%
+# que la media de la evaluación realizada por los oficiales es la misma para todos.
