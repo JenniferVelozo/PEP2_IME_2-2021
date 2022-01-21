@@ -47,3 +47,22 @@ g <- g + rremove ("x.ticks") + rremove ("x.text")
 g <- g + rremove ("y.ticks") + rremove ("y.text")
 g <- g + rremove ("axis.title")
 print ( g )
+
+# 4.- La matriz de varianzas-covarianzas es esférica,
+# para verificar esta condición se utiliza la  prueba de esfericidad de Mauchly que
+# es entregada por la función en R ezANOVA, al analizar el p-valor = 0.9051959  mayor a nuestro nivel de significación
+# por lo que podemos concluir que sí cumple la condición de esfericidad (hipótesis nula de la prueba de Mauchly).
+
+datos[["id"]] <- factor(datos[["id"]])
+# Procedimiento ANOVA con ezANOVA ().
+cat ("\n\ Procedimiento ANOVA usando ezANOVA \n\n")
+
+prueba2 <- ezANOVA ( data = datos , dv = exigencia, within = evaluador, wid = id, return_aov = TRUE )
+
+print (prueba2)
+
+
+# Gráfico del tamaño del efecto .
+g2 <- ezPlot (data = datos , dv = exigencia, wid = id, within = evaluador, y_lab = "Nivel de exigencia", x = evaluador)
+print ( g2 )
+
