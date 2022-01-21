@@ -256,5 +256,17 @@ matriz_p <-confusionMatrix(preds_p , prueba[["es_clon"]])
 print(matriz_p)
 
 
+# Como se puede observar, la exactitud es de 0.9125 para el conjunto de prueba.
+
+# No existen casos con distancia de Cook mayor a 1.
+
+# Considerando un alfa = 0.01, se tiene que el p-valor obtenido 
+# para la prueba de Durbin Watson es de 0.522, por lo que 
+# se cumple la independencia de los residuos.
+
+# Se verifica la condición de multicolinealidad dado que el promedio de VIF = 1.000187
+# es menor que 1,03
+
+# Es por lo anterior, que se puede decir que el modelo es aceptable.
 
 
