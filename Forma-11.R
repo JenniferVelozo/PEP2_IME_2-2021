@@ -87,22 +87,37 @@ print (holm)
 
 
 #-----------------------------------------------PREGUNTA DOS ------------------------------------------------------------
+library(pROC)
+library(caret)
+library(dplyr)
+library(car)
+library(ggpubr)
 
 # Lectura del archivo
 dir <- "E:/IME/PEP2_IME_2-2021"
 base <- "Datos PEP 2.csv"
 arch <- file.path(dir,base)
 datos<-read.csv2(arch, fileEncoding = "UTF-8")
+#Crear la variable dicotómica para es_clon: 
+# 1: Si 
+# 0: No 
+condicion <- ifelse(datos[["es_clon"]] =="S", 1,  0)
+# Se tramsforma es_clon en variable categórica
+datos[["es_clon"]] <- factor(condicion)
 
 #se define la semilla con la que trabajaremos, lo cual nos permite
 #trabajar siempre con los mismos números
 set.seed(4432)
+
+
 
 # se define el tamaño de la muestra
 tam <- 400
 
 # Se obtiene la muestra de 400 datos
 datos <- datos[sample(nrow(datos), tam), ]
+
+
 
 n <- nrow(datos)
 n_entrenamiento <- floor(0.8 * n)
@@ -119,13 +134,20 @@ columnas <- columnas[-i_es_clon]
 variables <- sample(columnas, 8)
 print(variables)
 
-estan <- c()
-for (i in 1:length(variables)){
-  indice <- which(columnas == variables[i])
-  estan <- c(estan, indice)
-}
-restantes <- columnas[-estan]
+# Se escoge la variable velocidad y peso 
+# ya que suponemos que un clon podría 
+# ser mejor que un soldado respecto a la velocidad
+# y que quizás tenga menor peso, lo cual
+# implicaría que fuese más ágil y veloz.
 
-print(restantes)
+# Ajustar modelo.
+
+
+modelo <- glm(es_clon ~ peso + velocidad, family = binomial(link ="logit"),data = entrenamiento)
+print(summary(modelo))
+
+
+
+
 
 
