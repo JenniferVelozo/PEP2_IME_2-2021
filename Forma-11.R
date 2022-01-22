@@ -297,5 +297,21 @@ print(matriz_p)
 # necesite utilizar una prueba de Kruskal-Wallis debido a problemas con la escala de la variable dependiente en estudio.
 # Indiqué cuáles serían las variables involucradas en su ejemplo (con sus respectivos niveles) y las hipótesis nula y
 # alternativa a contrastar.
+# En la actualidad la sensación de inseguridad cada vez es mayor debido a los altos niveles de violencia que ocupan los 
+# delincuentes para realizar delitos como asaltos a mano armada, encerronas, lanzazos, etc a lo largo de todo el país. 
+# Por esto se decide realizar un estudio el cual registre como se sienten los chilenos frente a las actitudes violentas de
+# los delincuentes que cada día se vuelve mas incontrolable, para ello se eligen 36 mujeres al azar,  49 hombres al azar, 60 adolecentes
+# al azar y 70 adultos mayores y cada uno de ellos se les realiza una encuesta para medir que tan efectados
+# quedarian su dario vivir luego de cualquier delito que involucre
+# violencia para esto se utiliza una escala de Likert (1-5) (donde 1 representa nada afectado y 5 muy afectado).
 
+# Hipótesis a contrastar:
+# H0: Para todos los grupos encuestados el nivel de efectación luego de un delito con violencia es el mismo
+# HA: Al menos un grupo presenta un nivel de efectación diferente.
+
+# Variables involucradas:
+
+# Variables:
+# mujeres, hombres, adolecentes y adultos mayores: variable independiente
+# Nivel de afectación de acuerdo al delito con violencia: variable dependiente
 
